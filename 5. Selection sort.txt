@@ -1,0 +1,13 @@
+def selection_sort(arr):
+    for i in range(len(arr) - 1):
+        min_index = min(range(i, len(arr)), key=arr.__getitem__) # to specify the index
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+        print(f"Step {i + 1}: {arr}")  # Display array after each pass for illustration
+    return arr
+
+# Get user input for the array
+arr = list(map(int, input("Enter elements of the array separated by spaces: ").split()))
+
+print("Original array:", arr)
+print("Sorted array:", selection_sort(arr))
+

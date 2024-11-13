@@ -1,0 +1,43 @@
+def chatbot_response(user_input):
+    # Convert user input to lowercase for easier comparison
+    user_input = user_input.lower()
+    
+    # Check for different user inputs and provide corresponding responses
+    if 'hello' in user_input or 'hi' in user_input:
+        return "Hello! How can I assist you today?"
+    
+    elif 'hours' in user_input or 'open' in user_input or 'close' in user_input:
+        return "Our store is open from 9 AM to 9 PM, Monday through Saturday."
+    
+    elif 'products' in user_input or 'available' in user_input:
+        return "We offer a wide range of products including electronics, clothing, and home appliances."
+    
+    elif 'contact' in user_input or 'phone' in user_input:
+        return "You can contact us at (123) 456-7890 or email us at support@example.com."
+    
+    elif 'location' in user_input or 'where' in user_input:
+        return "We are located at Baramati, VP College."
+    
+    elif 'bye' in user_input or 'goodbye' in user_input:
+        return "Goodbye! Feel free to reach out if you need any further assistance."
+    
+    else:
+        return "Yes, we offer a policy. Let me know if you'd like more details."
+
+if __name__ == "__main__":
+    print("Welcome to the Customer Support Chatbot!")
+    
+    # Start chatbot interaction loop
+    while True:
+        user_input = input("\nYou: ")
+        
+        # Check if user wants to exit the conversation
+        if 'exit' in user_input.lower() or 'bye' in user_input.lower():
+            print("Chatbot: Goodbye! Have a great day!")
+            break
+        
+        # Get chatbot response based on user input
+        response = chatbot_response(user_input)
+        
+        # Print chatbot's response
+        print(f"Chatbot: {response}")

@@ -1,0 +1,113 @@
+import math
+
+# Constants
+EMPTY, PLAYER_X, PLAYER_O = 0, 1, -1
+WIN_SCORE = 10
+
+# Print the Tic-Tac-Toe board
+def print_board(board):
+    symbols = {PLAYER_X: "X", PLAYER_O: "O", EMPTY: " "}
+    print("-" + "----" * 2)
+    for row in board:
+        print(" | ".join(symbols[cell] for cell in row))
+        print("-" * 9)
+
+# Check for a winner or a draw
+def check_winner(board):
+    for player in [PLAYER_X, PLAYER_O]:
+        # Check rows, columns, and diagonals for a win
+        if any(all(cell == player for cell in row) for row in board) or \
+           any(all(row[i] == player for row in board) for i in range(3)) or \
+           all(board[i][i] == player for i in range(3)) or \
+           all(board[i][2 - i] == player for i in range(3)):
+            return player
+    return None if any(EMPTY in row for row in board) else 0  # 0 means draw
+
+# Alpha-Beta Pruning for optimal move scoring
+def alpha_beta(board, depth, alpha, beta, max_player):
+    winner = check_winner(board)
+    if winner is not None:
+        # Return score based on who won
+        if winner == PLAYER_X:
+            return WIN_SCORE - depth
+        elif winner == PLAYER_O:
+            return depth - WIN_SCORE
+        return 0  # Draw
+
+    best = -math.inf if max_player else math.inf
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                board[i][j] = PLAYER_X if max_player else PLAYER_O
+                score = alpha_beta(board, depth + 1, alpha, beta, not max_player)
+                board[i][j] = EMPTY
+                if max_player:
+                    best = max(best, score)
+                    alpha = max(alpha, score)
+                else:
+                    best = min(best, score)
+                    beta = min(beta, score)
+                if beta <= alpha:
+                    break  # Alpha-beta pruning
+    return best
+
+# Find the best move for the AI (PLAYER_O)
+def find_best_move(board, player):
+    best_move = None
+    best_value = -math.inf if player == PLAYER_O else math.inf
+
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                board[i][j] = player
+                score = alpha_beta(board, 0, -math.inf, math.inf, player == PLAYER_X)
+                board[i][j] = EMPTY
+                # Maximize or minimize based on the player
+                if (player == PLAYER_O and score > best_value) or \
+                   (player == PLAYER_X and score < best_value):
+                    best_move, best_value = (i, j), score
+    return best_move
+
+# Game loop with user input and AI moves
+def play_game():
+    board = [[EMPTY] * 3 for _ in range(3)]
+    current_player = PLAYER_X
+
+    while True:
+        print_board(board)
+        
+        # Human player (X) turn
+        if current_player == PLAYER_X:
+            while True:
+                try:
+                    row, col = map(int, input("Enter row and column (0, 1, or 2) separated by space: ").split())
+                    if board[row][col] == EMPTY:
+                        board[row][col] = PLAYER_X
+                        break
+                    else:
+                        print("Cell is taken. Try another cell.")
+                except (ValueError, IndexError):
+                    print("Invalid input. Please enter numbers 0, 1, or 2.")
+        else:
+            # AI (O) turn
+            move = find_best_move(board, PLAYER_O)
+            if move:
+                board[move[0]][move[1]] = PLAYER_O
+
+        # Check for a winner
+        winner = check_winner(board)
+        if winner is not None:
+            print_board(board)
+            if winner == PLAYER_X:
+                print("Player X wins!")
+            elif winner == PLAYER_O:
+                print("AI (Player O) wins!")
+            else:
+                print("It's a draw!")
+            break
+
+        # Switch players
+        current_player = PLAYER_X if current_player == PLAYER_O else PLAYER_O
+
+# Start the game
+play_game()

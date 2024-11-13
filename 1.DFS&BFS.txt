@@ -1,0 +1,59 @@
+# Graph structure
+graph = {
+    'A': ['B', 'E', 'C'],
+    'B': ['A', 'D', 'E'],
+    'D': ['B', 'E'],
+    'E': ['A', 'D', 'B'],
+    'C': ['A', 'F', 'G'],
+    'F': ['C'],
+    'G': ['C']
+}
+
+# BFS implementation
+def bfs(visited, graph, start_node, goal_node):
+    visited.append(start_node)
+    queue = [start_node]
+
+    while queue:
+        m = queue.pop(0)
+        print(m)
+
+        if m == goal_node:
+            print("Node is Found!!!")
+            return
+
+        for n in graph[m]:
+            if n not in visited:
+                visited.append(n)
+                queue.append(n)
+
+# DFS implementation
+def dfs(graph, start, goal):
+    visited = []
+    stack = [start]
+
+    print("DFS traversal is:")
+    while stack:
+        node = stack.pop()
+        print("Node:", node)
+        visited.append(node)
+
+        if node == goal:
+            print("Goal node found!")
+            return
+
+        for n in graph[node]:
+            if n not in visited:
+                stack.append(n)
+
+# Input for BFS
+start_node_bfs = input("Enter the start node for BFS: ")
+goal_node_bfs = input("Enter the goal node for BFS: ")
+visited = []
+print("The BFS Traversal is:")
+bfs(visited, graph, start_node_bfs, goal_node_bfs)
+
+# Input for DFS
+start_node_dfs = input("Enter the start node for DFS: ")
+goal_node_dfs = input("Enter the goal node for DFS: ")
+dfs(graph, start_node_dfs, goal_node_dfs)

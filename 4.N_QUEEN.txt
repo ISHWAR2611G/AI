@@ -1,0 +1,51 @@
+def is_safe(row, col, board, n):
+    temprow, tempcol = row, col
+
+    # Check the left side in the same row
+    while col >= 0:
+        if board[row][col] == "Q":
+            return False
+        col -= 1
+
+    # Check upper diagonal on the left side
+    row, col = temprow, tempcol
+    while row >= 0 and col >= 0:
+        if board[row][col] == "Q":
+            return False
+        row -= 1
+        col -= 1
+
+    # Check lower diagonal on the left side
+    row, col = temprow, tempcol
+    while row < n and col >= 0:
+        if board[row][col] == "Q":
+            return False
+        row += 1
+        col -= 1
+
+    return True
+
+def print_board(board, n):
+    # Print the top border
+    print("-" + "----" * n)
+    for row in board:
+        print("| " + " | ".join(row) + " |")  # Row with separators
+        print(" " + "----" * n)  # Line separator after each row
+
+def solve_board(board, col, n):
+    if col == n:
+        print("Solution Found:")
+        print_board(board, n)
+        print()  # Separate solutions by a blank line
+        return
+
+    for row in range(n):
+        if is_safe(row, col, board, n):
+            board[row][col] = "Q"  # Place the queen
+            solve_board(board, col + 1, n)  # Recur to place next queen
+            board[row][col] = " "  # Backtrack
+
+# Take user input for the size of the board
+n = int(input("Enter the size of the chessboard (e.g., 4 for a 4x4 board): "))
+board = [[" " for _ in range(n)] for _ in range(n)]
+solve_board(board, 0, n)
